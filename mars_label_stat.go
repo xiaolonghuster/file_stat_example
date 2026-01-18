@@ -221,8 +221,8 @@ func processFile(filePath, labelKey string, fastParse bool) (map[string]int64, i
 	var lineCount int64
 
 	scanner := bufio.NewScanner(file)
-	buf := make([]byte, 0, 64*1024) // 64KB缓冲区
-	scanner.Buffer(buf, 1024*1024)  // 最大1MB的行
+	buf := make([]byte, 0, 256*1024)  // 256KB缓冲区
+	scanner.Buffer(buf, 10*1024*1024) // 最大10MB的行
 
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -264,7 +264,7 @@ func processFile(filePath, labelKey string, fastParse bool) (map[string]int64, i
 	}
 
 	if err := scanner.Err(); err != nil {
-		return counts, lineCount, fmt.Errorf("读取文件失败: %v", err)
+		return counts, lineCount, fmt.Errorf("读取文件失败[%s]: %v", filePath, err)
 	}
 
 	return counts, lineCount, nil
